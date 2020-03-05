@@ -7,5 +7,7 @@ module.exports = merge(prodEnv, {
   // 本地后台
   // BASE_API: '"http://localhost:8080"'
   // 远程后台
-  BASE_API: '"http://120.27.63.9:8080"'
+  // BASE_API: '"http://120.27.63.9:8080"'
+  // 远程后台2
+  BASE_API: '"http://www.aleph-null.cn:8083"'
 })

@@ -25,13 +25,44 @@ export const constantRouterMap = [
     path: '',
     component: Layout,
     redirect: '/home',
-    children: [{
+    children: [
+      {
       path: 'home',
       name: 'home',
       component: () => import('@/views/home/index'),
+      // component: () => import('@/views/sxhms/sxh/index'),
       meta: {title: '首页', icon: 'home'}
-    }]
-  }
+      },
+    ]
+  },
+  {
+    path:'/sxhms',
+    component: Layout,
+    redirect: '/sxhms/sxh',
+    name: 'sxhms',
+    meta: {title: '双选会', icon: 'ums-role'},
+    children: [
+      {
+        path: 'sxh',
+        name: 'sxh',
+        component: () => import('@/views/sxhms/sxh/index'),
+        meta: {title: '双选会列表', icon: 'product-list'}
+      },
+      {
+        path: 'sxh2',
+        name: 'sxh2',
+        component: () => import('@/views/sxhms/sxh/index'),
+        meta: {title: '双选会列表', icon: 'product-list'}
+      },
+      {
+        path: 'addSxh',
+        name: 'addSxh',
+        component: () => import('@/views/sxhms/sxh/add'),
+        meta: {title: '添加双选会'},
+        hidden: true
+      },
+    ]
+  },
 ]
 
 export const asyncRouterMap = [
@@ -358,6 +389,7 @@ export const asyncRouterMap = [
       }
     ]
   },
+  
   {path: '*', redirect: '/404', hidden: true}
 ]
 
