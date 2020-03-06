@@ -1,62 +1,50 @@
 <template> 
   <el-card class="form-container" shadow="never">
-    <el-form :model="brand" :rules="rules" ref="brandFrom" label-width="150px">
-      <el-form-item label="品牌名称：" prop="name">
-        <el-input v-model="brand.name"></el-input>
+    <el-form :model="sxh" :rules="rules" ref="sxhFrom" label-width="150px">
+      <el-form-item label="名称：" prop="name">
+        <el-input v-model="sxh.name"></el-input>
       </el-form-item>
-      <el-form-item label="品牌首字母：">
-        <el-input v-model="brand.firstLetter"></el-input>
+      <el-form-item label="城市：" prop="city">
+        <el-input v-model="sxh.city"></el-input>
       </el-form-item>
-      <el-form-item label="品牌LOGO：" prop="logo">
-        <single-upload v-model="brand.logo"></single-upload>
+      <el-form-item label="地址：" prop="address">
+        <el-input v-model="sxh.address"></el-input>
       </el-form-item>
-      <el-form-item label="品牌专区大图：">
-        <single-upload v-model="brand.bigPic"></single-upload>
+      <el-form-item label="容量：" prop="capacity">
+        <el-input v-model="sxh.capacity"></el-input>
       </el-form-item>
-      <el-form-item label="品牌故事：">
-        <el-input
-          placeholder="请输入内容"
-          type="textarea"
-          v-model="brand.brandStory"
-          :autosize="true"></el-input>
+      <el-form-item label="开始时间：" prop="startTime">
+        <el-date-picker type="datetime"  v-model="sxh.startTime" value-format="yyyy-MM-dd'T'HH:mm:ss'Z'" placeholder="选择开始时间" style="width: 100%;"></el-date-picker>
       </el-form-item>
-      <el-form-item label="排序：" prop="sort">
-        <el-input v-model.number="brand.sort"></el-input>
+      <el-form-item label="结束时间：" prop="endTime">
+        <el-date-picker type="datetime"  v-model="sxh.endTime" value-format="yyyy-MM-dd'T'HH:mm:ss'Z'" placeholder="选择结束时间" style="width: 100%;"></el-date-picker>
       </el-form-item>
-      <el-form-item label="是否显示：">
-        <el-radio-group v-model="brand.showStatus">
-          <el-radio :label="1">是</el-radio>
-          <el-radio :label="0">否</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="品牌制造商：">
-        <el-radio-group v-model="brand.factoryStatus">
-          <el-radio :label="1">是</el-radio>
-          <el-radio :label="0">否</el-radio>
-        </el-radio-group>
+      <el-form-item label="备注：" prop="note">
+        <el-input v-model="sxh.note"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit('brandFrom')">提交</el-button>
-        <el-button v-if="!isEdit" @click="resetForm('brandFrom')">重置</el-button>
+        <el-button type="primary" @click="onSubmit('sxhFrom')">提交</el-button>
+        <el-button v-if="!isEdit" @click="resetForm('sxhFrom')">重置</el-button>
       </el-form-item>
     </el-form>
   </el-card>
 </template>
 <script>
-  import {createBrand, getBrand, updateBrand} from '@/api/brand'
+  import {createSxh} from '@/api/shuangXuanHui'
   import SingleUpload from '@/components/Upload/singleUpload'
-  const defaultBrand={
-    bigPic: '',
-    brandStory: '',
-    factoryStatus: 0,
-    firstLetter: '',
-    logo: '',
+  const defaultSxh={
     name: '',
-    showStatus: 0,
-    sort: 0
+    city: '',
+    address: '',
+    capacity: 100,
+    startTime: '',
+    endTime: '',
+    note: '',
+    status: 1,
+    applyNumber: 0,
   };
   export default {
-    name: 'BrandDetail',
+    name: 'SxhDetail',
     components:{SingleUpload},
     props: {
       isEdit: {
@@ -66,28 +54,38 @@
     },
     data() {
       return {
-        brand:Object.assign({}, defaultBrand),
+        sxh:Object.assign({}, defaultSxh),
         rules: {
           name: [
-            {required: true, message: '请输入品牌名称', trigger: 'blur'},
+            {required: true, message: '请输入双选会名称', trigger: 'blur'},
             {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
           ],
-          logo: [
-            {required: true, message: '请输入品牌logo', trigger: 'blur'}
+          city: [
+            {required: true, message: '请输入城市', trigger: 'blur'}
           ],
-          sort: [
-            {type: 'number', message: '排序必须为数字'}
+          address: [
+            {required: true, message: '请输入详细地址', trigger: 'blur'}
+          ],
+          capacity: [
+            {required: true, message: '请输入双选会容量', trigger: 'blur'}
+          ],
+          startTime: [
+            {required: true, message: '请选择开始日期', trigger: 'blur'}
+          ],
+          endTime: [
+            {required: true, message: '请选择结束日期', trigger: 'blur'}
           ],
         }
       }
     },
     created() {
       if (this.isEdit) {
-        getBrand(this.$route.query.id).then(response => {
-          this.brand = response.data;
-        });
+        // getBrand(this.$route.query.id).then(response => {
+        //   this.brand = response.data;
+        // });
+        console.log("isEdit true");
       }else{
-        this.brand = Object.assign({},defaultBrand);
+        this.sxh = Object.assign({},defaultSxh);
       }
     },
     methods: {
@@ -110,15 +108,16 @@
                   this.$router.back();
                 });
               } else {
-                createBrand(this.brand).then(response => {
+                createSxh(this.sxh).then(response => {
                   this.$refs[formName].resetFields();
-                  this.brand = Object.assign({},defaultBrand);
+                  this.sxh = Object.assign({},defaultSxh);
                   this.$message({
                     message: '提交成功',
                     type: 'success',
                     duration:1000
                   });
                 });
+                // console.log(this.sxh);
               }
             });
 
@@ -134,7 +133,7 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
-        this.brand = Object.assign({},defaultBrand);
+        this.sxh = Object.assign({},defaultSxh);
       }
     }
   }

@@ -7,3 +7,10 @@ export function fetchList(params) {
     params:params
   })
 }
+export function createSxh(data) {
+  return request({
+    url:'/smsShuangxuanhui/add',
+    method:'post',
+    data:data
+  })
+}

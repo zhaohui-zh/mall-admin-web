@@ -62,7 +62,7 @@
           <template slot-scope="scope">{{scope.row.address}}</template>
         </el-table-column>
         <el-table-column label="状态" width="100" align="center">
-          <template slot-scope="scope">{{scope.row.status}}</template>
+          <template slot-scope="scope">{{scope.row.startTime | formatStatus(scope.row.endTime)}}</template>
         </el-table-column>
         <el-table-column label="备注" width="100" align="center">
           <template slot-scope="scope">{{scope.row.note}}</template>
@@ -104,7 +104,7 @@
   </div>
 </template>
 <script>
-  import {fetchList} from '@/api/shuangXuanhui'
+  import {fetchList} from '@/api/shuangXuanHui'
   import {formatDate} from '@/utils/date';
   export default {
     name: 'sxhList',
@@ -161,19 +161,16 @@
           return 'PC订单';
         }
       },
-      formatStatus(value) {
-        if (value === 1) {
-          return '待发货';
-        } else if (value === 2) {
-          return '已发货';
-        } else if (value === 3) {
-          return '已完成';
-        } else if (value === 4) {
-          return '已关闭';
-        } else if (value === 5) {
-          return '无效订单';
+      formatStatus(startTime, endTime) {
+        let now = new Date();
+        let startDate = new Date(startTime);
+        let endDate = new Date(endTime);
+        if (now < startDate) {
+          return '未开始';
+        } else if (now < endDate) {
+          return '正在进行';
         } else {
-          return '待付款';
+          return '已结束';
         }
       },
     },
