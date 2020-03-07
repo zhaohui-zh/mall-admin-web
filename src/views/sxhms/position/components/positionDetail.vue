@@ -1,50 +1,45 @@
 <template> 
   <el-card class="form-container" shadow="never">
-    <el-form :model="sxh" :rules="rules" ref="sxhFrom" label-width="150px">
+    <el-form :model="position" :rules="rules" ref="positionFrom" label-width="150px">
       <el-form-item label="名称：" prop="name">
-        <el-input v-model="sxh.name"></el-input>
+        <el-input v-model="position.name"></el-input>
       </el-form-item>
       <el-form-item label="城市：" prop="city">
-        <el-input v-model="sxh.city"></el-input>
+        <el-input v-model="position.city"></el-input>
       </el-form-item>
-      <el-form-item label="地址：" prop="address">
-        <el-input v-model="sxh.address"></el-input>
+      <el-form-item label="介绍：" prop="introduce">
+        <el-input v-model="position.introduce"></el-input>
       </el-form-item>
-      <el-form-item label="容量：" prop="capacity">
-        <el-input v-model="sxh.capacity"></el-input>
+      <el-form-item label="人数：" prop="number">
+        <el-input v-model="position.number"></el-input>
       </el-form-item>
-      <el-form-item label="开始时间：" prop="startTime">
-        <el-date-picker type="datetime"  v-model="sxh.startTime" placeholder="选择开始时间" style="width: 100%;"></el-date-picker>
+      <el-form-item label="要求：" prop="requirement">
+        <el-input v-model="position.requirement"></el-input>
       </el-form-item>
-      <el-form-item label="结束时间：" prop="endTime">
-        <el-date-picker type="datetime"  v-model="sxh.endTime" placeholder="选择结束时间" style="width: 100%;"></el-date-picker>
-      </el-form-item>
-      <el-form-item label="备注：" prop="note">
-        <el-input v-model="sxh.note"></el-input>
+      <el-form-item label="薪水：" prop="salary">
+        <el-input v-model="position.salary"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit('sxhFrom')">提交</el-button>
-        <el-button v-if="!isEdit" @click="resetForm('sxhFrom')">重置</el-button>
+        <el-button type="primary" @click="onSubmit('positionFrom')">提交</el-button>
+        <el-button v-if="!isEdit" @click="resetForm('positionFrom')">重置</el-button>
       </el-form-item>
     </el-form>
   </el-card>
 </template>
 <script>
-  import {createSxh, updateSxh} from '@/api/shuangXuanHui'
+  import {createPosition, updatePosition} from '@/api/position'
   import SingleUpload from '@/components/Upload/singleUpload'
-  const defaultSxh={
+  const defaultPosition={
     name: '',
+    companyId: null,
     city: '',
-    address: '',
-    capacity: null,
-    startTime: '',
-    endTime: '',
-    note: '',
-    status: 1,
-    applyNumber: 0,
+    introduce: '',
+    number: null,
+    requirement: '',
+    salary: null,
   };
   export default {
-    name: 'SxhDetail',
+    name: 'PositionDetail',
     components:{SingleUpload},
     props: {
       isEdit: {
@@ -54,35 +49,35 @@
     },
     data() {
       return {
-        sxh:Object.assign({}, defaultSxh),
+        position: Object.assign({}, defaultPosition),
         rules: {
           name: [
-            {required: true, message: '请输入双选会名称', trigger: 'blur'},
-            {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
+            {required: true, message: '请输入岗位名称', trigger: 'blur'},
           ],
           city: [
             {required: true, message: '请输入城市', trigger: 'blur'}
           ],
-          address: [
-            {required: true, message: '请输入详细地址', trigger: 'blur'}
+          introduce: [
+            {required: true, message: '请输入岗位介绍', trigger: 'blur'}
           ],
-          capacity: [
-            {required: true, message: '请输入双选会容量', trigger: 'blur'}
+          number: [
+            {required: true, message: '请输入招聘人数', trigger: 'blur'}
           ],
-          startTime: [
-            {required: true, message: '请选择开始日期', trigger: 'blur'}
+          requirement: [
+            {required: true, message: '请输入岗位要求', trigger: 'blur'}
           ],
-          endTime: [
-            {required: true, message: '请选择结束日期', trigger: 'blur'}
+          salary: [
+            {required: true, message: '请输入岗位薪水', trigger: 'blur'}
           ],
-        }
+        },
       }
     },
     created() {
       if (this.isEdit) {
-        this.sxh = this.$route.query.sxh;
+        this.position = this.$route.query.position;
       }else{
-        this.sxh = Object.assign({},defaultSxh);
+        this.position = Object.assign({},defaultPosition);
+        this.position.companyId = this.$route.query.companyId;
       }
     },
     methods: {
@@ -95,7 +90,7 @@
               type: 'warning'
             }).then(() => {
               if (this.isEdit) {
-                updateSxh(this.sxh).then(response => {
+                updatePosition(this.position).then(response => {
                   this.$refs[formName].resetFields();
                   this.$message({
                     message: '修改成功',
@@ -105,9 +100,9 @@
                   this.$router.back();
                 });
               } else {
-                createSxh(this.sxh).then(response => {
+                createPosition(this.position).then(response => {
                   this.$refs[formName].resetFields();
-                  this.sxh = Object.assign({},defaultSxh);
+                  this.position = Object.assign({},defaultPosition);
                   this.$message({
                     message: '提交成功',
                     type: 'success',
@@ -131,7 +126,7 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
-        this.sxh = Object.assign({},defaultSxh);
+        this.company = Object.assign({},defaultCompany);
       }
     }
   }

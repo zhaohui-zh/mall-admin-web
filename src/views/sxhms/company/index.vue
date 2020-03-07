@@ -25,7 +25,7 @@
       <span>数据列表</span>
       <el-button
         class="btn-add"
-        @click="addSxh()"
+        @click="addCompany()"
         size="mini">
         添加
       </el-button>
@@ -37,35 +37,23 @@
                 v-loading="listLoading"
                 border>
         <!-- <el-table-column type="selection" width="60" align="center"></el-table-column> -->
-        <el-table-column label="编号" width="100" align="center">
+        <el-table-column label="公司编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="名称" align="center">
+        <el-table-column label="双选会编号" align="center">
+          <template slot-scope="scope">{{scope.row.sxhId}}</template>
+        </el-table-column>
+        <el-table-column label="公司名称" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
-        <el-table-column label="开始时间" align="center">
-          <template slot-scope="scope">{{scope.row.startTime | formatCreateTime}}</template>
+        <el-table-column label="公司规模" align="center">
+          <template slot-scope="scope">{{scope.row.size}}</template>
         </el-table-column>
-        <el-table-column label="结束时间" align="center">
-          <template slot-scope="scope">{{scope.row.endTime | formatCreateTime}}</template>
+        <el-table-column label="公司性质" align="center">
+          <template slot-scope="scope">{{scope.row.property | formatProperty}}</template>
         </el-table-column>
-        <el-table-column label="容量" align="center">
-          <template slot-scope="scope">{{scope.row.capacity}}</template>
-        </el-table-column>
-        <el-table-column label="报名人数" align="center">
-          <template slot-scope="scope">{{scope.row.applyNumber}}</template>
-        </el-table-column>
-        <el-table-column label="城市" align="center">
-          <template slot-scope="scope">{{scope.row.city}}</template>
-        </el-table-column>
-        <el-table-column label="详细地址" width="100" align="center">
-          <template slot-scope="scope">{{scope.row.address}}</template>
-        </el-table-column>
-        <el-table-column label="状态" width="100" align="center">
-          <template slot-scope="scope">{{scope.row.startTime | formatStatus(scope.row.endTime)}}</template>
-        </el-table-column>
-        <el-table-column label="备注" width="100" align="center">
-          <template slot-scope="scope">{{scope.row.note}}</template>
+        <el-table-column label="公司简介" align="center">
+          <template slot-scope="scope">{{scope.row.profile}}</template>
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
@@ -77,7 +65,7 @@
             <el-button
               size="mini"
               type="primary"
-              @click="handleCompany(scope.$index, scope.row)">公司
+              @click="handlePosition(scope.$index, scope.row)">岗位
             </el-button>
           </template>
         </el-table-column>
@@ -118,10 +106,10 @@
   </div>
 </template>
 <script>
-  import {fetchList} from '@/api/shuangXuanHui'
+  import {fetchList} from '@/api/company'
   import {formatDate} from '@/utils/date';
   export default {
-    name: 'sxhList',
+    name: 'companyList',
     data() {
       return {
         operates: [
@@ -136,7 +124,7 @@
         ],
         operateType: null,
         listQuery: {
-          keyword: null,
+          sxhId: 1,
           pageNum: 1,
           pageSize: 10
         },
@@ -147,6 +135,7 @@
       }
     },
     created() {
+      this.listQuery.sxhId = this.$route.query.sxhId;
       this.getList();
     },
     filters: {
@@ -154,34 +143,17 @@
         let date = new Date(time);
         return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
       },
-      formatPayType(value) {
-        if (value === 1) {
-          return '支付宝';
-        } else if (value === 2) {
-          return '微信';
+      formatProperty(val) {
+        if (val === 0) {
+          return '国企';
+        } else if (val === 1) {
+          return '私企';
+        } else if (val === 2) {
+          return '外企';
         } else {
-          return '未支付';
+          return '其他';
         }
-      },
-      formatSourceType(value) {
-        if (value === 1) {
-          return 'APP订单';
-        } else {
-          return 'PC订单';
-        }
-      },
-      formatStatus(startTime, endTime) {
-        let now = new Date();
-        let startDate = new Date(startTime);
-        let endDate = new Date(endTime);
-        if (now < startDate) {
-          return '未开始';
-        } else if (now < endDate) {
-          return '正在进行';
-        } else {
-          return '已结束';
-        }
-      },
+      }
     },
     methods: {
       getList() {
@@ -211,19 +183,17 @@
         this.listQuery.pageNum = 1;
         this.getList();
       },
-      addSxh() {
-        // console.log("addBrand");
-        this.$router.push({path: '/sxhms/addSxh'});
-        // this.$router.push({path: '/pms/addBrand'})
+      addCompany() {
+        this.$router.push({path: '/sxhms/addCompany', query: {sxhId: this.listQuery.sxhId}});
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
       handleUpdate(index, row) {
-        this.$router.push({path: '/sxhms/updateSxh', query: {sxh: row}})
+        this.$router.push({path: '/sxhms/updateCompany', query: {company: row}})
       },
-      handleCompany(index, row) {
-        this.$router.push({path: '/sxhms/company', query: {sxhId: row.id}})
+      handlePosition(index, row) {
+        this.$router.push({path: '/sxhms/position', query: {companyId: row.id}})
       }
     }
   }

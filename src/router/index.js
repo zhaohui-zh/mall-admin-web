@@ -46,19 +46,62 @@ export const constantRouterMap = [
         path: 'sxh',
         name: 'sxh',
         component: () => import('@/views/sxhms/sxh/index'),
-        meta: {title: '双选会列表', icon: 'product-list'}
-      },
-      {
-        path: 'sxh2',
-        name: 'sxh2',
-        component: () => import('@/views/sxhms/sxh/index'),
-        meta: {title: '双选会列表', icon: 'product-list'}
+        meta: {title: '双选会', icon: 'product-list'}
       },
       {
         path: 'addSxh',
         name: 'addSxh',
         component: () => import('@/views/sxhms/sxh/add'),
         meta: {title: '添加双选会'},
+        hidden: true
+      },
+      {
+        path: 'updateSxh',
+        name: 'updateSxh',
+        component: () => import('@/views/sxhms/sxh/update'),
+        meta: {title: '修改双选会'},
+        hidden: true
+      },
+      {
+        path: 'company',
+        name: 'company',
+        component: () => import('@/views/sxhms/company/index'),
+        meta: {title: '公司列表'},
+        hidden: true
+      },
+      {
+        path: 'addCompany',
+        name: 'addCompany',
+        component: () => import('@/views/sxhms/company/add'),
+        meta: {title: '添加公司'},
+        hidden: true
+      },
+      {
+        path: 'updateCompany',
+        name: 'updateCompany',
+        component: () => import('@/views/sxhms/company/update'),
+        meta: {title: '修改公司'},
+        hidden: true
+      },
+      {
+        path: 'position',
+        name: 'position',
+        component: () => import('@/views/sxhms/position/index'),
+        meta: {title: '职位列表'},
+        hidden: true
+      },
+      {
+        path: 'addPosition',
+        name: 'addPosition',
+        component: () => import('@/views/sxhms/position/add'),
+        meta: {title: '添加职位'},
+        hidden: true
+      },
+      {
+        path: 'updatePosition',
+        name: 'updatePosition',
+        component: () => import('@/views/sxhms/position/update'),
+        meta: {title: '修改职位'},
         hidden: true
       },
     ]

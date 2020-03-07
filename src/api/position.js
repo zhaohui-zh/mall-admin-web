@@ -2,21 +2,21 @@ import request from '@/utils/myRequest'
 
 export function fetchList(params) {
   return request({
-    url:'/smsShuangxuanhui/list',
+    url:'/smsPosition/list',
     method:'get',
     params:params
   })
 }
-export function createSxh(data) {
+export function createPosition(data) {
   return request({
-    url:'/smsShuangxuanhui/add',
+    url:'/smsPosition/add',
     method:'post',
     data:data
   })
 }
-export function updateSxh(data) {
+export function updatePosition(data) {
   return request({
-    url:'/smsShuangxuanhui/update',
+    url:'/smsPosition/update',
     method:'post',
     data:data
   })
